@@ -1,4 +1,5 @@
 import {useState, useEffect} from "react"
+import Form from './Form.js'
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(false)
   const [user, setUser] = useState({
@@ -20,10 +21,13 @@ function App() {
   }, [])
 
 
-  const handleSubmit = (e) => {
+  const handleSignup = (e, form) => {
     e.preventDefault()
+    console.log(e)
+    console.log("----------------")
+    console.log(form)
     fetch("http://localhost:5000/users/register", {
-      body: JSON.stringify(user),
+      body: JSON.stringify(form),
       method: "POST",
       headers: {
         'Content-Type': "application/json"
@@ -31,16 +35,14 @@ function App() {
       credentials: 'include'
     })
     .then(data => data.json())
-    .then(json => {
-      setLoggedInUser(json)
-    })
+    .then(json => setLoggedInUser(json))
     // Send Data
   }
 
-  const handleLogin = (e) => {
+  const handleLogin = (e, form) => {
     e.preventDefault()
     fetch("http://localhost:5000/users/login", {
-      body: JSON.stringify(user),
+      body: JSON.stringify(form),
       method: "POST",
       headers: {
         'Content-Type': "application/json"
@@ -48,44 +50,18 @@ function App() {
       credentials: 'include'
     })
     .then(data => data.json())
-    .then(json => {
-      setLoggedInUser(json)
-    })
+    .then(json => setLoggedInUser(json))
     // Send Data
   }
 
-  const handleChange = (e) => {
-    console.log(e.target.name)
-    setUser({...user, [e.target.name]: e.target.value})
-  }
   return (
     <>
     {!loggedInUser ? (
       <>
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username" >Username</label>
-          <input name="username" onChange={handleChange} value={user.username} />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input name="password" onChange={handleChange} value={user.password} />
-        </div>
-        <button>Register!</button>
-      </form>
+      <Form handleSubmit={handleSignup} formFields={["username", "password", "confirm"]} title="Register!" />
       <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username" >Username</label>
-          <input name="username" onChange={handleChange} value={user.username} />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input name="password" onChange={handleChange} value={user.password} />
-        </div>
-        <button>Login!</button>
-      </form>
+      <Form handleSubmit={handleLogin} formFields={["username", "password"]} title="Log In!" />
       </>
     ) : (
       <h2>You are logged in</h2>
