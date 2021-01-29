@@ -2,10 +2,6 @@ import {useState, useEffect} from "react"
 import Form from './Form.js'
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(false)
-  const [user, setUser] = useState({
-    username: "",
-    password: "",
-  })
   
   useEffect(() => {
     fetch("http://localhost:5000/users/me", {
@@ -23,9 +19,6 @@ function App() {
 
   const handleSignup = (e, form) => {
     e.preventDefault()
-    console.log(e)
-    console.log("----------------")
-    console.log(form)
     fetch("http://localhost:5000/users/register", {
       body: JSON.stringify(form),
       method: "POST",
